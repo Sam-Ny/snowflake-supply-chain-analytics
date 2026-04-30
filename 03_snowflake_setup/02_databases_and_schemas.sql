@@ -1,4 +1,4 @@
-USE ROLE ENGINEER_ROLE;
+USE ROLE ACCOUNTADMIN;
 USE WAREHOUSE TRANSFORM_WH;
 
 -- ── Main database ─────────────────────────────────────────────
