@@ -1,0 +1,116 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Customer dimension with SCD Type 2 history."
+    columns:
+      - name: CUSTOMER_SURROGATE_KEY
+        description: "Surrogate key from SCD Type 2 snapshot"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: CUSTOMER_ID
+        description: "Natural key"
+        data_tests:
+          - not_null
+
+  - name: dim_products
+    description: "Product dimension with English category names."
+    columns:
+      - name: PRODUCT_ID
+        description: "Primary key"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: PRODUCT_CATEGORY_ENGLISH
+        description: "English product category name"
+
+  - name: dim_sellers
+    description: "Seller dimension with geolocation."
+    columns:
+      - name: SELLER_ID
+        description: "Primary key"
+        data_tests:
+          - unique
+          - not_null
+
+  - name: dim_date
+    description: "Date dimension covering 2016-2022."
+    columns:
+      - name: DATE_ID
+        description: "Primary key - YYYYMMDD format"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: DATE_DAY
+        description: "Actual date value"
+        data_tests:
+          - unique
+          - not_null
+
+  - name: fact_orders
+    description: "Central fact table. One row per order line item."
+    columns:
+      - name: ORDER_ID
+        description: "Order identifier"
+        data_tests:
+          - not_null
+
+      - name: ORDER_ITEM_ID
+        description: "Line item number"
+        data_tests:
+          - not_null
+
+      - name: PRODUCT_ID
+        description: "Foreign key to dim_products"
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_products')
+              field: PRODUCT_ID
+
+      - name: SELLER_ID
+        description: "Foreign key to dim_sellers"
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_sellers')
+              field: SELLER_ID
+
+      - name: ITEM_PRICE
+        description: "Price of the item"
+        data_tests:
+          - not_null
+
+      - name: DELIVERY_STATUS
+        description: "Whether order was on time or late"
+        data_tests:
+          - accepted_values:
+              values: ['on_time', 'late', 'unknown']
+
+      - name: REVIEW_SENTIMENT
+        description: "Customer review sentiment"
+        data_tests:
+          - accepted_values:
+              values: ['positive', 'neutral', 'negative']
+
+  - name: agg_seller_performance
+    description: "Seller performance metrics aggregated by month."
+    columns:
+      - name: SELLER_ID
+        description: "Seller identifier"
+        data_tests:
+          - not_null
+
+      - name: ORDER_MONTH
+        description: "Year-month of orders"
+        data_tests:
+          - not_null
+
+      - name: TOTAL_REVENUE
+        description: "Total revenue for seller in that month"
+        data_tests:
+          - not_null

@@ -1,0 +1,135 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: "Cleaned orders data from Bronze. One row per order."
+    columns:
+      - name: ORDER_ID
+        description: "Primary key - unique order identifier"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: CUSTOMER_ID
+        description: "Foreign key to stg_customers"
+        data_tests:
+          - not_null
+
+      - name: ORDER_STATUS
+        description: "Current status of the order"
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['delivered', 'shipped', 'canceled', 'unavailable',
+                       'invoiced', 'processing', 'created', 'approved']
+
+      - name: ORDER_PURCHASED_AT
+        description: "Timestamp when order was placed"
+
+      - name: DELIVERY_STATUS
+        description: "Whether order was delivered on time or late"
+        data_tests:
+          - accepted_values:
+              values: ['on_time', 'late', 'unknown']
+
+  - name: stg_customers
+    description: "Cleaned customer data. One row per customer_id."
+    columns:
+      - name: CUSTOMER_ID
+        description: "Primary key"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: CUSTOMER_UNIQUE_ID
+        description: "Unique customer across multiple orders"
+        data_tests:
+          - not_null
+
+      - name: CUSTOMER_STATE
+        description: "Brazilian state code"
+        data_tests:
+          - not_null
+
+  - name: stg_order_items
+    description: "Cleaned order line items. One row per order + item."
+    columns:
+      - name: ORDER_ID
+        description: "Foreign key to stg_orders"
+        data_tests:
+          - not_null
+
+      - name: ORDER_ITEM_ID
+        description: "Line item number within order"
+        data_tests:
+          - not_null
+
+      - name: ITEM_PRICE
+        description: "Price of the item"
+        data_tests:
+          - not_null
+
+      - name: TOTAL_ITEM_VALUE
+        description: "Item price plus freight"
+        data_tests:
+          - not_null
+
+  - name: stg_products
+    description: "Cleaned product catalog. One row per product."
+    columns:
+      - name: PRODUCT_ID
+        description: "Primary key"
+        data_tests:
+          - unique
+          - not_null
+
+  - name: stg_sellers
+    description: "Cleaned seller data. One row per seller."
+    columns:
+      - name: SELLER_ID
+        description: "Primary key"
+        data_tests:
+          - unique
+          - not_null
+
+      - name: SELLER_STATE
+        description: "Brazilian state code"
+        data_tests:
+          - not_null
+
+  - name: stg_payments
+    description: "Cleaned payment data. One row per order + payment sequence."
+    columns:
+      - name: ORDER_ID
+        description: "Foreign key to stg_orders"
+        data_tests:
+          - not_null
+
+      - name: PAYMENT_VALUE
+        description: "Payment amount"
+        data_tests:
+          - not_null
+
+  - name: stg_reviews
+    description: "Cleaned review data. One row per review."
+    columns:
+      - name: REVIEW_ID
+        description: "Primary key"
+        data_tests:
+          - not_null
+
+      - name: ORDER_ID
+        description: "Foreign key to stg_orders"
+        data_tests:
+          - not_null
+
+      - name: REVIEW_SCORE
+        description: "Review score 1-5"
+        data_tests:
+          - not_null
+
+      - name: REVIEW_SENTIMENT
+        description: "Derived sentiment bucket"
+        data_tests:
+          - accepted_values:
+              values: ['positive', 'neutral', 'negative', 'unknown']
