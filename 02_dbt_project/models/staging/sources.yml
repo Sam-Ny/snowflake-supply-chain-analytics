@@ -1,0 +1,35 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: SUPPLY_CHAIN_DB
+    schema: BRONZE
+    description: "Raw Olist data landed from Databricks ingestion pipeline"
+
+    tables:
+      - name: RAW_ORDERS
+        description: "All orders placed on Olist platform"
+
+      - name: RAW_CUSTOMERS
+        description: "Customer information"
+
+      - name: RAW_ORDER_ITEMS
+        description: "Line items for each order"
+
+      - name: RAW_PRODUCTS
+        description: "Product catalog"
+
+      - name: RAW_SELLERS
+        description: "Seller information"
+
+      - name: RAW_PAYMENTS
+        description: "Payment details per order"
+
+      - name: RAW_REVIEWS
+        description: "Customer reviews per order"
+
+      - name: RAW_GEOLOCATION
+        description: "Zip code to lat/long mapping"
+
+      - name: RAW_CATEGORY_TRANSLATION
+        description: "Product category names Portuguese to English"

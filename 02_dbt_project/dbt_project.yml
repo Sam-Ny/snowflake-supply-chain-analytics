@@ -1,0 +1,28 @@
+name: 'supply_chain_dbt'
+version: '1.0.0'
+
+profile: 'supply_chain_dbt'
+
+model-paths: ["models"]
+snapshot-paths: ["snapshots"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+analysis-paths: ["analyses"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  supply_chain_dbt:
+    staging:
+      +schema: SILVER
+      +materialized: view
+    intermediate:
+      +schema: SILVER
+      +materialized: view
+    marts:
+      +schema: GOLD
+      +materialized: table
