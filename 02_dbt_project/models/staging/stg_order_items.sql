@@ -15,7 +15,7 @@ with source as (
 cleaned as (
 
     select
-        -- composite key (order_id + order_item_id)
+        -- composite key
         ORDER_ID,
         ORDER_ITEM_ID,
 
@@ -23,13 +23,13 @@ cleaned as (
         PRODUCT_ID,
         SELLER_ID,
 
-        -- dates
-        to_timestamp_ntz(to_varchar(SHIPPING_LIMIT_DATE)) as shipping_limit_at,
+        -- dates (stored as unix nanoseconds — divide by 1B to get seconds)
+        to_timestamp(SHIPPING_LIMIT_DATE / 1000000000)              as shipping_limit_at,
 
         -- financials
-        round(PRICE, 2)                                   as item_price,
-        round(FREIGHT_VALUE, 2)                           as freight_value,
-        round(PRICE + FREIGHT_VALUE, 2)                   as total_item_value,
+        round(PRICE, 2)                                             as item_price,
+        round(FREIGHT_VALUE, 2)                                     as freight_value,
+        round(PRICE + FREIGHT_VALUE, 2)                             as total_item_value,
 
         -- metadata
         _INGESTED_AT,

@@ -19,24 +19,24 @@ cleaned as (
         REVIEW_ID,
         ORDER_ID,
 
-        -- review details
-        REVIEW_SCORE                            as review_score,
+        -- review details (cast to int — stored as TEXT in Bronze)
+        try_to_number(REVIEW_SCORE)                                 as review_score,
 
         -- sentiment
         case
-            when REVIEW_SCORE >= 4 then 'positive'
-            when REVIEW_SCORE = 3  then 'neutral'
-            when REVIEW_SCORE <= 2 then 'negative'
+            when try_to_number(REVIEW_SCORE) >= 4 then 'positive'
+            when try_to_number(REVIEW_SCORE) = 3  then 'neutral'
+            when try_to_number(REVIEW_SCORE) <= 2 then 'negative'
             else 'unknown'
-        end                                     as review_sentiment,
+        end                                                         as review_sentiment,
 
         -- text fields
-        REVIEW_COMMENT_TITLE                    as review_title,
-        REVIEW_COMMENT_MESSAGE                  as review_message,
+        REVIEW_COMMENT_TITLE                                        as review_title,
+        REVIEW_COMMENT_MESSAGE                                      as review_message,
 
-        -- timestamps
-        try_to_timestamp(REVIEW_CREATION_DATE)      as review_created_at,
-        try_to_timestamp(REVIEW_ANSWER_TIMESTAMP)   as review_answered_at,
+        -- timestamps (stored as VARCHAR)
+        try_to_timestamp(REVIEW_CREATION_DATE, 'YYYY-MM-DD HH24:MI:SS')    as review_created_at,
+        try_to_timestamp(REVIEW_ANSWER_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as review_answered_at,
 
         -- metadata
         _INGESTED_AT,

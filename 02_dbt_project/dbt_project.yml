@@ -19,7 +19,7 @@ models:
   supply_chain_dbt:
     staging:
       +schema: SILVER
-      +materialized: view
+      +materialized: table        # change from view to table
     intermediate:
       +schema: SILVER
       +materialized: view
