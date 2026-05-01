@@ -1,0 +1,14 @@
+snapshots:
+  - name: customers_snapshot
+    relation: ref('stg_customers')
+    config:
+        target_schema: SILVER
+        target_database: SUPPLY_CHAIN_DB
+        unique_key: CUSTOMER_ID
+        strategy: check
+        check_cols:
+          - CUSTOMER_CITY
+          - CUSTOMER_STATE
+          - CUSTOMER_ZIP_CODE
+        invalidate_hard_deletes: true
+        dbt_valid_to_current: "to_date('9999-12-31')"
