@@ -36,8 +36,6 @@ The architecture mirrors real enterprise patterns used in large-scale distributi
 
 ## 🏗️ Architecture
 
-![Architecture Diagram](04_docs/architecture_diagram.png)
-
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        SOURCE LAYER                             │
